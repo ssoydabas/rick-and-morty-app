@@ -26,6 +26,8 @@ import { Toolbar } from "@/components/dataTable/Toolbar";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/dataTable/Pagination";
 import { DataTableFiltering } from "@/app/(dashboard)/_components/CharactersTable/types";
+import { useCharacterStore } from "@/lib/zustand/characterStore";
+import { CharacterType } from "@/lib/axios/types";
 
 interface CharactersTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,6 +49,8 @@ export default function CharactersTable<TData, TValue>({
   onFilterChange,
 }: CharactersTableProps<TData, TValue>) {
   const router = useRouter();
+
+  const { setCharacter } = useCharacterStore();
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -108,7 +112,10 @@ export default function CharactersTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={`${row.id}-${Math.random()}`}
-                  onClick={() => router.push(`/character/${row.original.id}`)}
+                  onClick={() => {
+                    setCharacter(row.original as CharacterType);
+                    router.push(`/character/${row.original.id}`);
+                  }}
                   data-state={row.getIsSelected() && "selected"}
                   className="cursor-pointer"
                 >

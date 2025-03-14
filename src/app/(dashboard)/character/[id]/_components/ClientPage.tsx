@@ -3,12 +3,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCharacter } from "@/hooks/queries";
 import Image from "next/image";
+import { useCharacterStore } from "@/lib/zustand/characterStore";
 
 interface ClientPageProps {
   id: number;
 }
 export default function ClientPage({ id }: ClientPageProps) {
   const { data, isLoading, isError } = useCharacter({ id });
+
+  // Please note that this is not required for this project, but it is a good example of how to use zustand.
+  const { character } = useCharacterStore();
+  console.log(character);
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
