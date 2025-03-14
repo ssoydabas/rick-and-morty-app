@@ -6,7 +6,6 @@ import {
   flexRender,
   useReactTable,
   getCoreRowModel,
-  getPaginationRowModel,
   SortingState,
   getSortedRowModel,
   ColumnFiltersState,
@@ -23,12 +22,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "@/components/dataTable/Pagination";
 import { DataTableToolbar } from "@/components/dataTable/Toolbar";
 import { useRouter } from "next/navigation";
 import { DataTableFilterConfig } from "@/components/dataTable/types";
+import Pagination from "@/components/dataTable/Pagination";
 
-interface AllStoresTableProps<TData, TValue> {
+interface CharactersTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filters: DataTableFilterConfig[];
@@ -46,7 +45,7 @@ export default function CharactersTable<TData, TValue>({
   filters,
   pagination,
   onFilterChange,
-}: AllStoresTableProps<TData, TValue>) {
+}: CharactersTableProps<TData, TValue>) {
   const router = useRouter();
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -65,7 +64,6 @@ export default function CharactersTable<TData, TValue>({
       }) satisfies FilterFn<any>,
     },
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -110,7 +108,6 @@ export default function CharactersTable<TData, TValue>({
               <TableRow
                 key={`${row.id}-${Math.random()}`}
                 data-state={row.getIsSelected() && "selected"}
-                onClick={() => router.push(`/stores/${row.original.id}`)}
                 className="cursor-pointer"
               >
                 {row.getVisibleCells().map((cell) => (
@@ -130,7 +127,7 @@ export default function CharactersTable<TData, TValue>({
         </TableBody>
       </Table>
 
-      <DataTablePagination table={table} />
+      {pagination && <Pagination pagination={pagination} />}
     </div>
   );
 }
