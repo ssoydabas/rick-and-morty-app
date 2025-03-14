@@ -1,0 +1,10 @@
+{
+  "name": "Rick and Morty App",
+  "short_name": "Rick and Morty App",
+  "description": "Rick and Morty App",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#71f56e",
+  "icons": []
+}
