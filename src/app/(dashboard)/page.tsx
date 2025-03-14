@@ -1,47 +1,61 @@
-import { CharacterType } from "@/lib/axios/types";
+"use client";
+
+import { useCharacters } from "@/hooks/queries/useCharacters";
 import CharactersTable from "./_components/CharactersTable";
 import {
   charactersTableColumns,
   charactersTableFilters,
 } from "@/app/(dashboard)/_components/CharactersTable/utils";
+import { useQueryState } from "nuqs";
 
 export default function Home() {
-  const dummyData = [
-    {
-      id: 1,
-      name: "Character One",
-      status: "Alive",
-      species: "Human",
-      type: "Hero",
-      gender: "Male",
-      image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-    },
-    {
-      id: 2,
-      name: "Character Two",
-      status: "Dead",
-      species: "Human",
-      type: "Villain",
-      gender: "Female",
-      image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-    },
-    {
-      id: 3,
-      name: "Character Three",
-      status: "Alive",
-      species: "Human",
-      type: "Sidekick",
-      gender: "Non-binary",
-      image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-    },
-  ] as CharacterType[];
+  const [page, setPage] = useQueryState("page", {
+    defaultValue: "1",
+    parse: (value) => value,
+  });
 
+  const [status, setStatus] = useQueryState("status", {
+    defaultValue: "",
+    parse: (value) => value,
+  });
+
+  const [gender, setGender] = useQueryState("gender", {
+    defaultValue: "",
+    parse: (value) => value,
+  });
+
+  const { data, isLoading, isError } = useCharacters({
+    page: Number(page),
+    status,
+    gender,
+  });
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage.toString());
+  };
+
+  const handleFilterChange = (filterType: string, value: string) => {
+    if (filterType === "status") setStatus(value);
+    else if (filterType === "gender") setGender(value);
+    setPage("1");
+  };
+
+  if (isLoading)
+    return <div className="p-8 text-center">Loading characters...</div>;
+  if (isError)
+    return <div className="p-8 text-center">Error loading characters</div>;
   return (
     <div className="px-4 py-2">
       <CharactersTable
         columns={charactersTableColumns}
-        data={dummyData}
+        data={data?.results || []}
         filters={charactersTableFilters}
+        pagination={{
+          currentPage: Number(page),
+          totalPages: data?.info.pages || 1,
+          onPageChange: handlePageChange,
+        }}
+        onFilterChange={handleFilterChange}
       />
     </div>
   );

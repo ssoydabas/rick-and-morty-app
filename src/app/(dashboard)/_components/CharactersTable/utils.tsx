@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/dataTable/ColumnHeader";
 import { DataTableFilterConfig } from "@/components/dataTable/types";
 import { CharacterType } from "@/lib/axios/types";
+import CharacterImage from "./CharacterImage";
 
 export const charactersTableColumns: ColumnDef<CharacterType>[] = [
   {
@@ -55,7 +56,9 @@ export const charactersTableColumns: ColumnDef<CharacterType>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} sort title="Image" />
     ),
-    cell: ({ row }) => <div>{row.getValue("image")}</div>,
+    cell: ({ row }) => (
+      <CharacterImage src={row.getValue("image")} alt={row.getValue("name")} />
+    ),
   },
 ];
 

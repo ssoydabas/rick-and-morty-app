@@ -32,12 +32,20 @@ interface AllStoresTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filters: DataTableFilterConfig[];
+  pagination?: {
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+  };
+  onFilterChange?: (filterType: string, value: string) => void;
 }
 
 export default function CharactersTable<TData, TValue>({
   columns,
   data,
   filters,
+  pagination,
+  onFilterChange,
 }: AllStoresTableProps<TData, TValue>) {
   const router = useRouter();
 
