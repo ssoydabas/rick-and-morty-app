@@ -5,6 +5,7 @@ import { DataTableColumnHeader } from "@/components/dataTable/ColumnHeader";
 import { DataTableFilterConfig } from "@/components/dataTable/types";
 import { CharacterType } from "@/lib/axios/types";
 import CharacterImage from "./CharacterImage";
+import { DataTableFiltering } from "@/app/(dashboard)/_components/CharactersTable/types";
 
 export const charactersTableColumns: ColumnDef<CharacterType>[] = [
   {
@@ -80,5 +81,30 @@ export const charactersTableFilters: DataTableFilterConfig[] = [
       { value: "Dead", label: "Dead" },
       { value: "unknown", label: "Unknown" },
     ],
+  },
+];
+
+export const getUrlFilters = (
+  status: string,
+  gender: string,
+  handleFilterChange: (filterType: string, value: string) => void,
+): DataTableFiltering[] => [
+  {
+    columnName: "status",
+    title: "Status",
+    options:
+      charactersTableFilters.find((f) => f.columnName === "status")?.options ||
+      [],
+    value: status || "",
+    onChange: (value: string) => handleFilterChange("status", value),
+  },
+  {
+    columnName: "gender",
+    title: "Gender",
+    options:
+      charactersTableFilters.find((f) => f.columnName === "gender")?.options ||
+      [],
+    value: gender || "",
+    onChange: (value: string) => handleFilterChange("gender", value),
   },
 ];

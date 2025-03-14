@@ -1,58 +1,48 @@
-"use client";
-
 import { type ReactNode } from "react";
 import { Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "./ViewOptions";
+import { FacetedFilter } from "./FacetedFilter";
+import { DataTableFiltering } from "@/app/(dashboard)/_components/CharactersTable/types";
 
-import { DataTableFacetedFilter } from "./FacetedFilter";
-import type { DataTableFilterConfig } from "./types";
-
-interface DataTableToolbarProps<TData> {
+interface ToolbarProps<TData> {
   table: Table<TData>;
-  filters?: DataTableFilterConfig[];
+  filters?: DataTableFiltering[];
   createButton?: ReactNode;
 }
 
-export function DataTableToolbar<TData>({
+export function Toolbar<TData>({
   table,
   filters,
   createButton,
-}: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+}: ToolbarProps<TData>) {
+  const hasActiveFilters = filters?.some((filter) => filter.value !== "");
+
+  const handleResetFilters = () => {
+    filters?.forEach((filter) => {
+      filter.onChange("");
+    });
+  };
 
   return (
     <div className="flex items-center justify-between p-4">
       <div className="flex flex-1 items-center space-x-2">
-        <Input
-          placeholder="Search"
-          value={(table.getState().globalFilter as string) ?? ""}
-          onChange={(event) => table.setGlobalFilter(event.target.value)}
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
-
         {filters &&
-          filters.map(({ columnName, title, options }) => {
-            const column = table.getColumn(columnName);
-            return (
-              column && (
-                <DataTableFacetedFilter
-                  key={columnName}
-                  column={column}
-                  title={title}
-                  options={options}
-                />
-              )
-            );
-          })}
+          filters.map(({ columnName, title, options, value, onChange }) => (
+            <FacetedFilter
+              key={columnName}
+              title={title}
+              options={options}
+              value={value}
+              onChange={onChange}
+            />
+          ))}
 
-        {isFiltered && (
+        {hasActiveFilters && (
           <Button
             variant="ghost"
-            onClick={() => table.resetColumnFilters()}
+            onClick={handleResetFilters}
             className="h-8 px-2 lg:px-3"
           >
             Reset

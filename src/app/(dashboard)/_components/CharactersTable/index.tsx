@@ -22,15 +22,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTableToolbar } from "@/components/dataTable/Toolbar";
+import { Toolbar } from "@/components/dataTable/Toolbar";
 import { useRouter } from "next/navigation";
-import { DataTableFilterConfig } from "@/components/dataTable/types";
 import Pagination from "@/components/dataTable/Pagination";
+import { DataTableFiltering } from "@/app/(dashboard)/_components/CharactersTable/types";
 
 interface CharactersTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filters: DataTableFilterConfig[];
+  filters?: DataTableFiltering[];
   pagination?: {
     currentPage: number;
     totalPages: number;
@@ -80,7 +80,7 @@ export default function CharactersTable<TData, TValue>({
 
   return (
     <div className="flex h-[calc(100vh-120px)] flex-col rounded-md border">
-      <DataTableToolbar table={table} filters={filters} />
+      <Toolbar table={table} filters={filters} />
 
       <div className="flex-grow overflow-auto">
         <Table>

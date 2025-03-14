@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import CharactersTable from "./CharactersTable";
 import {
   charactersTableColumns,
-  charactersTableFilters,
+  getUrlFilters,
 } from "@/app/(dashboard)/_components/CharactersTable/utils";
 import { GetCharactersResponse } from "@/lib/axios/response";
 import { getCharacters } from "@/lib/axios";
@@ -46,23 +46,23 @@ export default function ClientPage({
     setPage("1");
   };
 
+  const urlFilters = getUrlFilters(status, gender, handleFilterChange);
+
   if (isLoading)
     return <div className="p-8 text-center">Loading characters...</div>;
   if (isError)
     return <div className="p-8 text-center">Error loading characters</div>;
-
   return (
     <div className="px-4 py-2">
       <CharactersTable
         columns={charactersTableColumns}
         data={data?.results || []}
-        filters={charactersTableFilters}
+        filters={urlFilters}
         pagination={{
           currentPage: Number(page) ?? 1,
           totalPages: data?.info.pages || 1,
           onPageChange: handlePageChange,
         }}
-        onFilterChange={handleFilterChange}
       />
     </div>
   );
