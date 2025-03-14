@@ -1,54 +1,49 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, usePathname } from "next/navigation";
 import CharactersTable from "./CharactersTable";
 import {
   charactersTableColumns,
   charactersTableFilters,
 } from "@/app/(dashboard)/_components/CharactersTable/utils";
-import { useEffect, useState } from "react";
 import { GetCharactersResponse } from "@/lib/axios/response";
 import { getCharacters } from "@/lib/axios";
+import { useQueryState } from "nuqs";
 
 interface ClientPageProps {
-  initialPage: number;
+  initialPage: string;
   initialStatus: string;
   initialGender: string;
 }
+
 export default function ClientPage({
   initialPage,
   initialStatus,
   initialGender,
 }: ClientPageProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const [page, setPage] = useState(initialPage);
-  const [status, setStatus] = useState(initialStatus);
-  const [gender, setGender] = useState(initialGender);
+  const [page, setPage] = useQueryState("page", {
+    defaultValue: initialPage,
+  });
+  const [status, setStatus] = useQueryState("status", {
+    defaultValue: initialStatus,
+  });
+  const [gender, setGender] = useQueryState("gender", {
+    defaultValue: initialGender,
+  });
 
   const { data, isLoading, isError } = useQuery<GetCharactersResponse>({
     queryKey: ["characters", { page, status, gender }],
-    queryFn: () => getCharacters(page, status, gender),
+    queryFn: () => getCharacters(Number(page), status ?? "", gender ?? ""),
   });
 
-  useEffect(() => {
-    const params = new URLSearchParams();
-    params.set("page", page.toString());
-    if (status) params.set("status", status);
-    if (gender) params.set("gender", gender);
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [page, status, gender, router, pathname]);
-
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    setPage(newPage.toString());
   };
 
   const handleFilterChange = (filterType: string, value: string) => {
     if (filterType === "status") setStatus(value);
     else if (filterType === "gender") setGender(value);
-    setPage(1);
+    setPage("1");
   };
 
   if (isLoading)
@@ -63,7 +58,7 @@ export default function ClientPage({
         data={data?.results || []}
         filters={charactersTableFilters}
         pagination={{
-          currentPage: page,
+          currentPage: Number(page) ?? 1,
           totalPages: data?.info.pages || 1,
           onPageChange: handlePageChange,
         }}

@@ -7,18 +7,20 @@ import ClientPage from "./_components/ClientPage";
 import { getCharacters } from "@/lib/axios";
 
 interface HomeProps {
-  searchParams: { page?: string; status?: string; gender?: string };
+  searchParams: Promise<{ page?: string; status?: string; gender?: string }>;
 }
 export default async function Home({ searchParams }: HomeProps) {
-  const page = Number(searchParams.page || "1");
-  const status = searchParams.status || "";
-  const gender = searchParams.gender || "";
+  const params = await searchParams;
+
+  const page = params.page || "1";
+  const status = params.status || "";
+  const gender = params.gender || "";
 
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: ["characters", { page, status, gender }],
-    queryFn: () => getCharacters(page, status, gender),
+    queryFn: () => getCharacters(Number(page), status, gender),
   });
 
   return (
