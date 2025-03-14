@@ -46,7 +46,6 @@ export default function CharactersTable<TData, TValue>({
   data,
   filters,
   pagination,
-  onFilterChange,
 }: CharactersTableProps<TData, TValue>) {
   const router = useRouter();
 
@@ -65,7 +64,7 @@ export default function CharactersTable<TData, TValue>({
       booleanFilter: ((row, columnId, filterValue) => {
         const value = row.getValue(columnId) as boolean;
         return value === (filterValue === "true");
-      }) satisfies FilterFn<any>,
+      }) satisfies FilterFn<CharacterType>,
     },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,

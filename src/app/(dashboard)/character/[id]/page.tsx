@@ -1,5 +1,5 @@
 import ClientPage from "@/app/(dashboard)/character/[id]/_components/ClientPage";
-import { characterQueryKey, useCharacter } from "@/hooks/queries";
+import { characterQueryKey } from "@/hooks/queries";
 import { getCharacter } from "@/lib/axios";
 import {
   dehydrate,

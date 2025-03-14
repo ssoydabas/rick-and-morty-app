@@ -1,6 +1,5 @@
 "use client";
 
-import { keepPreviousData } from "@tanstack/react-query";
 import CharactersTable from "./CharactersTable";
 import {
   charactersTableColumns,
