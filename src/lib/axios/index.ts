@@ -30,3 +30,16 @@ export const api = {
     }
   },
 };
+
+export async function getCharacters(
+  page: number,
+  status: string,
+  gender: string,
+): Promise<GetCharactersResponse> {
+  const params = new URLSearchParams();
+  if (page) params.set("page", page.toString());
+  if (status) params.set("status", status);
+  if (gender) params.set("gender", gender);
+  const response = await api.getCharacters(page, status, gender);
+  return response;
+}
