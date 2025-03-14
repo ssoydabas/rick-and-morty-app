@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import CharactersTable from "./CharactersTable";
 import {
   charactersTableColumns,
@@ -34,6 +34,7 @@ export default function ClientPage({
   const { data, isLoading, isError } = useQuery<GetCharactersResponse>({
     queryKey: ["characters", { page, status, gender }],
     queryFn: () => getCharacters(Number(page), status ?? "", gender ?? ""),
+    placeholderData: keepPreviousData,
   });
 
   const handlePageChange = (newPage: number) => {
