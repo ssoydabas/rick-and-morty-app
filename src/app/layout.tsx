@@ -1,4 +1,7 @@
+import "./globals.css";
 import Providers from "@/app/provider";
+import Header from "@/components/header/Header";
+import { cn } from "@/lib/utils";
 
 export default function RootLayout({
   children,
@@ -35,9 +38,14 @@ export default function RootLayout({
       <Head />
 
       <body>
-        <Providers>
-          <main>{children}</main>
-        </Providers>
+        <div className={cn("font-sans antialiased")}>
+          <Providers>
+            <main>
+              <Header />
+              {children}
+            </main>
+          </Providers>
+        </div>
       </body>
     </html>
   );
