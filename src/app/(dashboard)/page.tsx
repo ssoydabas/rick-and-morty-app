@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 import ClientPage from "./_components/ClientPage";
 import { getCharacters } from "@/lib/axios";
+import { charactersQueryKey } from "@/hooks/queries";
 
 interface HomeProps {
   searchParams: Promise<{ page?: string; status?: string; gender?: string }>;
@@ -19,7 +20,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["characters", { page, status, gender }],
+    queryKey: [charactersQueryKey, { page: Number(page), status, gender }],
     queryFn: () => getCharacters(Number(page), status, gender),
   });
 

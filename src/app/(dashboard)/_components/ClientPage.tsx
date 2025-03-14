@@ -1,14 +1,13 @@
 "use client";
 
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData } from "@tanstack/react-query";
 import CharactersTable from "./CharactersTable";
 import {
   charactersTableColumns,
   getUrlFilters,
 } from "@/app/(dashboard)/_components/CharactersTable/utils";
-import { GetCharactersResponse } from "@/lib/axios/response";
-import { getCharacters } from "@/lib/axios";
 import { useQueryState } from "nuqs";
+import { useCharacters } from "@/hooks/queries";
 
 interface ClientPageProps {
   initialPage: string;
@@ -31,10 +30,10 @@ export default function ClientPage({
     defaultValue: initialGender,
   });
 
-  const { data, isLoading, isError } = useQuery<GetCharactersResponse>({
-    queryKey: ["characters", { page, status, gender }],
-    queryFn: () => getCharacters(Number(page), status ?? "", gender ?? ""),
-    placeholderData: keepPreviousData,
+  const { data, isLoading, isError } = useCharacters({
+    page: Number(page),
+    status: status || "",
+    gender: gender || "",
   });
 
   const handlePageChange = (newPage: number) => {

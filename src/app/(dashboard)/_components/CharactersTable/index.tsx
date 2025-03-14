@@ -108,6 +108,7 @@ export default function CharactersTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={`${row.id}-${Math.random()}`}
+                  onClick={() => router.push(`/character/${row.original.id}`)}
                   data-state={row.getIsSelected() && "selected"}
                   className="cursor-pointer"
                 >
